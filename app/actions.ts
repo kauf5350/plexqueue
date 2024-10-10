@@ -49,8 +49,8 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  // Redirect to /protected instead of /dashboard
-  return redirect("/protected");
+  // Redirect to /dashboard instead of /protected
+  return redirect("/dashboard");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
