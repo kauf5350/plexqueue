@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusCircle, CheckCircle } from "lucide-react";
@@ -19,8 +20,8 @@ export function DashboardContent() {
             <p className="text-[hsl(240,5%,64.9%)] mb-4">
               Submit requests for new content to be added to the Plex server.
             </p>
-            <Button className="w-full bg-[hsl(0,0%,98%)] text-[hsl(240,5.9%,10%)] hover:bg-[hsl(0,0%,90%)]">
-              Make a New Request
+            <Button className="w-full bg-[hsl(0,0%,98%)] text-[hsl(240,5.9%,10%)] hover:bg-[hsl(0,0%,90%)]" asChild>
+              <Link href="/dashboard/new-request">Make a New Request</Link>
             </Button>
           </CardContent>
         </Card>
