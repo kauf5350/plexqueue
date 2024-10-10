@@ -52,9 +52,11 @@ export default function NewRequestPage() {
       <DashboardHeader />
 
       <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-4">New Requests</h1>
+        <h1 className="text-2xl font-bold mb-8 text-center">New Requests</h1>
         
-        <SearchBar onSearch={handleSearch} />
+        <div className="mb-8">
+          <SearchBar onSearch={handleSearch} />
+        </div>
 
         {isLoading && <div className="text-center">Loading...</div>}
 
@@ -66,7 +68,7 @@ export default function NewRequestPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {searchResults.map((result) => (
             <MediaCard
               key={result.id}
@@ -82,7 +84,7 @@ export default function NewRequestPage() {
         </div>
 
         {searchResults.length > 0 && (
-          <div className="mt-4 flex justify-center">
+          <div className="mt-8 flex justify-center">
             <Button
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               disabled={page === 1}
