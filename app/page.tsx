@@ -24,10 +24,13 @@ export default function Home() {
       setUser(user);  // This should now work correctly
     };
     checkUser();
+
+    // Force dark mode
+    document.documentElement.classList.add('dark');
   }, [supabase.auth]);
 
   return (
-    <div className="min-h-screen bg-[hsl(240,10%,3.9%)] text-[hsl(0,0%,98%)] flex flex-col">
+    <div className="min-h-screen bg-[hsl(240,10%,3.9%)] text-[hsl(0,0%,98%)] flex flex-col dark">
       <Header />
 
       <main className="flex-grow container mx-auto px-4 py-8">
