@@ -13,16 +13,11 @@ interface FeatureCardProps {
 
 export function FeatureCard({ Icon, title, description, neonColors }: FeatureCardProps) {
   return (
-    <NeonGradientCard
-      className="h-full"
-      borderSize={2}
-      borderRadius={12}
-      neonColors={neonColors}
-    >
-      <div className="flex flex-col items-center h-full">
-        <Icon className="w-12 h-12 mb-4 text-[hsl(0,0%,98%)]" />
-        <h3 className="text-xl font-bold mb-2 text-[hsl(0,0%,98%)]">{title}</h3>
-        <p className="text-center text-[hsl(240,5%,64.9%)]">{description}</p>
+    <NeonGradientCard neonColors={neonColors}>
+      <div className="flex flex-col items-center h-full p-6">
+        <Icon className="w-12 h-12 mb-4" />
+        <h3 className="text-xl font-semibold mb-2 text-center">{title}</h3>
+        <p className="text-sm text-center flex-grow">{description}</p>
       </div>
     </NeonGradientCard>
   )
