@@ -1,17 +1,36 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { createBrowserClient } from '@supabase/ssr'
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { SearchBar } from "@/components/SearchBar";
 import { MediaCard } from "@/components/MediaCard";
 import { Footer } from "@/components/Footer";
 import { searchMedia, MediaResult } from "@/utils/tmdb";
-import { submitRequest } from "../../../utils/supabase";
+import { useToast } from "@/components/hooks/use-toast";
 
 export default function NewRequestPage() {
   const [searchResults, setSearchResults] = useState<MediaResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+  const router = useRouter();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+  const [submittedRequests, setSubmittedRequests] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push('/sign-in');
+      }
+    };
+    checkUser();
+  }, [router, supabase.auth]);
 
   const handleSearch = async (query: string) => {
     if (query.trim() === '') {
@@ -23,7 +42,7 @@ export default function NewRequestPage() {
     setError(null);
     try {
       const results = await searchMedia(query);
-      console.log('Search results:', results.map(r => ({title: r.title || r.name, vote_average: r.vote_average})));
+      console.log('Search results:', results.map(r => ({title: r.title || r.name})));
       setSearchResults(results.slice(0, 12)); // Limit to 12 results
     } catch (err) {
       setError('An error occurred while searching. Please try again.');
@@ -33,12 +52,46 @@ export default function NewRequestPage() {
 
   const handleRequest = async (mediaItem: MediaResult) => {
     try {
-      await submitRequest(mediaItem);
-      console.log(`Requested media: ${mediaItem.title || mediaItem.name}`);
-      // You might want to show a success message or update the UI here
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please sign in to submit a request.",
+          variant: "destructive",
+        });
+        router.push('/sign-in');
+        return;
+      }
+
+      const response = await fetch('/api/submit-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(mediaItem),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit request');
+      }
+
+      const result = await response.json();
+      console.log('Request submitted:', result);
+      toast({
+        title: "Request Submitted",
+        description: `Your request for ${mediaItem.title || mediaItem.name} has been submitted successfully.`,
+      });
+      
+      setSubmittedRequests(prev => new Set(prev).add(mediaItem.id));
     } catch (error) {
       console.error('Error submitting request:', error);
-      // Handle the error (e.g., show an error message to the user)
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "There was an error submitting your request. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -71,10 +124,11 @@ export default function NewRequestPage() {
               title={result.title || result.name || 'Unknown Title'}
               mediaType={result.media_type}
               releaseDate={result.release_date || result.first_air_date}
-              posterPath={result.poster_path}
-              overview={result.overview || 'No overview available'}
-              rating={result.vote_average}
+              posterPath={result.poster_path || null}
               onRequest={() => handleRequest(result)}
+              isRequested={submittedRequests.has(result.id)}
+              overview={result.overview} // Add this line
+              voteAverage={result.vote_average} // Add this line
             />
           ))}
         </div>

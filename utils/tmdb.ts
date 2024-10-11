@@ -9,12 +9,11 @@ export interface MediaResult {
   poster_path: string | null;
   release_date?: string;
   first_air_date?: string;
-  overview: string;
+  overview: string; // Add this line
   vote_average: number; // Add this line
 }
 
 export interface MediaDetails extends MediaResult {
-  vote_average: number;
   genres: { id: number; name: string }[];
 }
 
