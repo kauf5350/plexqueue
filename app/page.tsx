@@ -9,8 +9,6 @@ import { Footer } from "@/components/Footer"
 import Marquee from "react-fast-marquee"
 import { useEffect, useState } from "react"
 import { createBrowserClient } from '@supabase/ssr'
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { User } from '@supabase/supabase-js'  // Add this import
 
 export default function Home() {
@@ -33,21 +31,7 @@ export default function Home() {
       <Header />
 
       <main className="flex-grow container mx-auto px-4 py-8">
-        <HeroSection />
-
-        {user ? (
-          <section className="text-center mb-16">
-            <h2 className="text-2xl font-bold mb-4">Welcome back, {user.email}!</h2>
-            <div className="flex justify-center space-x-4">
-              <Button size="lg" asChild className="bg-[hsl(0,0%,98%)] text-[hsl(240,5.9%,10%)] hover:bg-[hsl(0,0%,90%)]">
-                <Link href="/dashboard">Go to Dashboard</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild className="border-[hsl(240,3.7%,15.9%)] text-[hsl(0,0%,98%)] bg-[hsl(240,3.7%,15.9%)] hover:bg-[hsl(240,5%,26%)]">
-                <Link href="/dashboard/new-request">Make a New Request</Link>
-              </Button>
-            </div>
-          </section>
-        ) : null}
+        <HeroSection user={user} />
 
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <FeatureCard

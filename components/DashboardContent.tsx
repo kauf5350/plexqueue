@@ -31,13 +31,14 @@ export function DashboardContent() {
             <CardTitle className="text-[hsl(0,0%,98%)] flex items-center">
               <CheckCircle className="mr-2" />
               Submitted Requests
+              <span className="ml-2 text-sm font-normal text-[hsl(240,5%,64.9%)]">(Coming Soon)</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-[hsl(240,5%,64.9%)] mb-4">
               View the status of your submitted content requests.
             </p>
-            <Button className="w-full bg-[hsl(0,0%,98%)] text-[hsl(240,5.9%,10%)] hover:bg-[hsl(0,0%,90%)]">
+            <Button className="w-full bg-[hsl(0,0%,98%)] text-[hsl(240,5.9%,10%)] hover:bg-[hsl(0,0%,90%)]" disabled>
               View Submitted Requests
             </Button>
           </CardContent>
